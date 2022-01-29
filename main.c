@@ -6,7 +6,7 @@
 #include <math.h>
 int main(int argc, char **argv) {
   if (!argv[1]) {
-    printf("ERROR: You must provide an integer representing the number to "
+    printf("ERROR: You must provide an integer to sieve to"
            "sieve to\n");
     return 0;
   }
@@ -43,6 +43,7 @@ int main(int argc, char **argv) {
   }
   printf("Done!\n");
   printf(output);
+  free(output);
   free(numbers);
   return 0;
 }

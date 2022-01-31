@@ -38,6 +38,7 @@ int main(int argc, char **argv) {
 
   for (int i = 0; i < count; i++) {
     if (numbers[i]) {
+      
       unsigned short char_count = sprintf(position, "%d\n", i);
       position += char_count;
     }

@@ -25,12 +25,13 @@ int main(int argc, char **argv) {
   if (argv[1]) {
     dimensions = atoi(argv[1]);
   } else {
-    std::cout << "you must provide a number of dimensionssss\n";
+    std::cout << "you must provide a number of dimensions\n";
     return 0;
   }
   std::cout << "using " << dimensions << " dimensions\n";
-	vec2<float> v(1, 2);
-	vec2<float> w(3, 4);
-	std::cout << (v + w).text();
+	bool running = true;
+	while(running){
+	
+	}
   return 0;
 }

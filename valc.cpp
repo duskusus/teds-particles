@@ -31,7 +31,14 @@ int main(int argc, char **argv) {
   std::cout << "using " << dimensions << " dimensions\n";
 	bool running = true;
 	while(running){
-	
+		std::string in = "";
+		std::cin >> in;
+		if(in == "quit"){
+			running = false;
+			std::cout << "...quitting\n";
+		}else{
+			std::cout << "nothing\n";
+		}
 	}
   return 0;
 }

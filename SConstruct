@@ -1,6 +1,6 @@
 env = Environment(CC = 'clang++')
 print('..Building valc')
 env.Program('valc', Glob('valc.cpp'))
-env.Append(CCFLAGS=['-lm'])
+env.Append(CCFLAGS=['-lm', '-O2'])
 print('..Building sieve')
 env.Program('sieve', Glob('sieve.c'))

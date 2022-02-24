@@ -1,6 +1,6 @@
 env = Environment(CC = 'clang++')
-print('..Building valc')
 env.Program('valc', Glob('valc.cpp'))
-env.Append(CCFLAGS=['-lm', '-O2'])
+env.Append(CCFLAGS=['-lm'])
 print('..Building sieve')
 env.Program('sieve', Glob('sieve.c'))
+env.Program('hashing', 'hashing.cpp')

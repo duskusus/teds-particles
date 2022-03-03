@@ -11,8 +11,8 @@ SDL_Texture *_TEX;
 unsigned int _PITCH;
 unsigned int _WIDTH = 0;
 unsigned int _HEIGHT = 0;
-Fbuffer *_SCREEN;
 Color *_FPIXELS;
+Fbuffer *_SCREEN;
 
 vec2 mouse(){
     vec2 fmouse(2.0 * _MOUSEPOS.x / float(_WIDTH) - 1.0, 1.0 - (2.0 * _MOUSEPOS.y / float(_HEIGHT)));
@@ -25,7 +25,7 @@ bool clickCheck()
     _CLICKED = false;
     return ph;
 }
-Fbuffer *init(int width, int height, const char *name)
+Fbuffer init(int width, int height, const char *name)
 {
     SDL_Init(SDL_INIT_VIDEO);
     _WIN = SDL_CreateWindow(name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
@@ -35,8 +35,8 @@ Fbuffer *init(int width, int height, const char *name)
     _WIDTH = width;
     _HEIGHT = height;
     _PITCH = _WIDTH * 3;
-    _SCREEN = new Fbuffer(_WIDTH, _HEIGHT);
-    return _SCREEN;
+    Fbuffer f(_WIDTH, _HEIGHT);
+    return f;
 }
 void present()
 {

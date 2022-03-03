@@ -1,23 +1,21 @@
+#include "gUtil.h"
 #include "util.h"
-#include "primitives.h"
 #include <cmath>
 #include <iostream>
-extern bool _RUNNING;
-int main(int argc, char **argv)
-{
-    bool running = true;
-    Fbuffer *s = init(1280, 720, "");
-    while (_RUNNING)
-    {
-	for(int x = 0; x < _WIDTH; x++){
-		for(int y = 0; y < _HEIGHT; y++){
-			s->tri(0, 1, 1);
-		}
-	}
-        present();
-        poll();
 
-    }
-    quit();
-    return 0;
+extern Fbuffer *_SCREEN;
+extern bool _RUNNING;
+
+int main(int argc, char **argv) {
+  bool running = true;
+  Fbuffer s = init(1280, 720, "");
+  _SCREEN = &s;
+  while (_RUNNING) {
+    s.clear(Color(0, 0, 0));
+    s.ftri(Color(1.0, 1.0, 1.0), vec2(0.0, 0.0), vec2(0.0, 0.5 + mouse().len()) + mouse(), mouse());
+    present();
+    poll();
+  }
+  quit();
+  return 0;
 }

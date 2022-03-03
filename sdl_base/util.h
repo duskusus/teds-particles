@@ -9,5 +9,5 @@ uint32_t *lock();
 void present();
 void quit();
 void poll();
-Fbuffer *init(int width, int height, const char *name);
+Fbuffer init(int width, int height, const char *name);
 bool clickCheck();

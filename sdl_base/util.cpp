@@ -29,35 +29,12 @@ Fbuffer init(int width, int height, const char *name)
 {
     SDL_Init(SDL_INIT_VIDEO);
     _WIN = SDL_CreateWindow(name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
-    _REN = SDL_CreateRenderer(_WIN, -1, SDL_RENDERER_SOFTWARE);
-    _TEX = SDL_CreateTexture(_REN, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
     _RUNNING = true;
     _WIDTH = width;
     _HEIGHT = height;
     _PITCH = _WIDTH * 3;
-    Fbuffer f(_WIDTH, _HEIGHT);
+    Fbuffer f(_WIDTH, _HEIGHT, _WIN);
     return f;
-}
-void present()
-{
-    static std::chrono::steady_clock::time_point last = std::chrono::steady_clock::now();
-    uint32_t *_IPIXELS;
-    //if you impliment a depth buffer, maybe do it here
-    SDL_LockTexture(_TEX, nullptr, (void **)&_IPIXELS, (int *)&_PITCH);
-    for (int i = 0; i < _WIDTH * _HEIGHT; i++)
-    {
-        _IPIXELS[i] = _SCREEN->get(i);
-    }
-    SDL_UnlockTexture(_TEX);
-    SDL_RenderCopy(_REN, _TEX, NULL, NULL);
-    SDL_RenderPresent(_REN);
-    unsigned int elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - last).count();
-    last = std::chrono::steady_clock::now();
-    if(elapsed < 16){
-        SDL_Delay(16 - elapsed);
-    }
-    
-    std::cout << elapsed << std::endl;
 }
 void quit()
 {
@@ -83,10 +60,7 @@ void poll()
         }
         else if(e.type == SDL_KEYDOWN)
         {
-            switch(e.key.keysym.sym){
-                case SDLK_c:
-                    _SCREEN->clear(Color(0, 0, 0));
-            }
+            //handle keyboard events here with a switch on e.key.sym.keysym (or something)
         }
         else if(e.type == SDL_MOUSEBUTTONDOWN)
         {

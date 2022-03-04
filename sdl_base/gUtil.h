@@ -3,6 +3,7 @@
 #include "vec3.h"
 #include <cmath>
 #include <stdint.h>
+#include <SDL2/SDL.h>
 
 extern unsigned int _WIDTH;
 extern unsigned int _HEIGHT;
@@ -17,8 +18,11 @@ public:
 class Fbuffer {
 public:
   Color *buffer;
+  SDL_Texture *texture;
+  SDL_Renderer *renderer;
+  unsigned int pitch;
   unsigned int buffer_size;
-  Fbuffer(unsigned int width, unsigned int height);
+  Fbuffer(unsigned int width, unsigned int height, SDL_Window *window);
   void set(vec2 pos, Color c);
   void set(unsigned int x, unsigned int y, Color c);
   unsigned int get(unsigned int pos);
@@ -28,4 +32,5 @@ public:
   void iline(Color c, vec2 pos1, vec2 pos2);
   void tri(Color col, vec2 a, vec2 b, vec2 c);
   void ftri(Color fill, vec2 a, vec2 b, vec2 c);
+  void present();
 };

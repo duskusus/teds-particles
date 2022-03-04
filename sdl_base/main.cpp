@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
   while (_RUNNING) {
     s.clear(Color(0, 0, 0));
     s.ftri(Color(1.0, 1.0, 1.0), vec2(0.0, 0.0), vec2(0.0, 0.5 + mouse().len()) + mouse(), mouse());
-    present();
+    s.present();
     poll();
   }
   quit();

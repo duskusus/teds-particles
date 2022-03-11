@@ -1,54 +1,83 @@
 #include "gUtil.h"
 #include <iostream>
-void Fbuffer::line( Color c, vec2 pos1, vec2 pos2)
+#include <cmath>
+void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c)
 {
-    const float precision = 600;
-    vec2 d = pos2 - pos1;
-    if (d.len() == 0.0)
-        return;
-    d = d / d.len();
-    d = d / precision;
-    //std::cout << "dx: " << d.x << " dy: " << d.y <<  std::endl;
-    vec2 e = pos1;
-    while ((pos2 - e).len() > 1 / precision)
-    {
-        e = e + d;
-        set(e, c);
-        //std::cout << "e.x: " << e.x << " e.y: " << e.y << std::endl;
-    }
-}
+    vec2 top;
+    vec2 middle;
+    vec2 bottom;
+    set(middle, Color(0, 1, 0));
+    if(a.intx() == b.intx() || a.intx() == c.intx() || c.intx() == b.intx()) {
+        std::cout << "horizontal edge\n";
+        middle = (a.inty() > b.inty()) ? a : b;
+        middle = (middle.inty() > c.inty()) ? c : middle;
+        
+        set(middle, Color(0, 1, 0));
+    } else if(a.inty() == b.inty() || a.inty() == c.inty() || c.inty() == b.inty()) {
+        std::cout << "vertical edge\n";
 
-void Fbuffer::iline( Color c, vec2 pos1, vec2 pos2)
-{
-    int x1 = pos1.intx();
-    int x2 = pos2.intx();
-    int y1 = pos1.inty();
-    int y2 = pos2.inty();
-    int dx = x2 - x1;
-    int dy = y2 - y1;
-    if (abs(dy) < abs(dx))
-    {
+        middle = (a.intx() > b.intx()) ? a : b;
+        middle = (middle.intx() > c.intx()) ? c : middle;
+        
+        set(middle, Color(0, 1, 0));
+    } else {
+        std::cout << "neither\n";
+        //these are broken up vertically into smaller triangles
+        top = (a.inty() > b.inty()) ? a : b;
+        top = (top.inty() > c.inty()) ? top : c;
 
-        for (int t = 0; abs(t) < abs(dx); t+= sign(dx))
-        {
-            int fx = t * dy + y1 * dx;
-            fx = fx / dx;
-            set(t + x1, fx, c);
+        bottom = (a.inty() < b.inty()) ? a : b;
+        bottom = (bottom.inty() < c.inty()) ? bottom : c;
+
+        if(a.inty() > bottom.inty() && a.inty() < top.inty()) {
+            middle = a;
+        } else if(b.inty() > bottom.inty() && b.inty() < top.inty()) {
+            middle = b;
+        } else if(c .inty () > bottom.inty() && b.inty () < top.inty()){
+            middle = c;
         }
-    }else{
-        for(int t = 0; abs(t) < abs(dy); t+= sign(dy))
-        {
-            int fy = t * dx + x1 * dy;
-            fy = fy / dy;
-            set(fy, t + y1, Color(1, 0, 0));
-        }
+
+        //top triangle vertices
+        vec2 t_a, t_b, t_c;
+        //bottom triangle vertices
+        vec2 b_a, b_b, b_c;
+
+        //top triangle
+        t_a = top;
+        t_b = middle;
+        t_c = (top-middle).proj_on(top-bottom) + top;
+        ftri(Color(1, 0, 0), t_a, t_b, t_c);
+        float radius = 0.1;
+        circle(Color(0, 0, 1), t_a, radius);
+        circle(Color(0, 1, 1), t_c, radius);
+        circle(Color(0, 1, 0), t_b, radius);
+        //bottom triangle
+        b_a = bottom;
+        b_b = middle;
+        b_c = t_c;
+        ftri(Color(0, 0, 1), b_a, b_b, b_c);
     }
 }
 void Fbuffer::tri( Color col, vec2 a, vec2 b, vec2 c)
 {
-    line(col, a, b);
-    line(col, b, c);
-    line(col, c, a);
+    iline(col, a, b);
+    iline(col, b, c);
+    iline(col, c, a);
+}
+void Fbuffer::circle(Color fill, vec2 center, float r)
+{
+    float w = float(_HEIGHT);
+    r *= w;
+    for(int x = r * -1 ; x < r; x++)
+    {
+        int hh = r * r - x * x;
+        int h = sqrt(hh);
+        std::cout << "x: " << x << " hh: " << hh << std::endl;
+        for(int y = 0-h; y < 0 + h; y++) {
+            
+            set(x + center.intx(), y + center.inty(), fill);
+        }
+    }
 }
 void Fbuffer::ftri( Color fill, vec2 a, vec2 b, vec2 c)
 {
@@ -68,5 +97,5 @@ void Fbuffer::ftri( Color fill, vec2 a, vec2 b, vec2 c)
         x = x + d;
         y = y + e;
     }
-    tri(Color(1, 1, 1), a, b, c);
+    tri(fill, a, b, c);
 }

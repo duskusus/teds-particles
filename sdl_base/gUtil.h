@@ -26,11 +26,15 @@ public:
   void set(vec2 pos, Color c);
   void set(unsigned int x, unsigned int y, Color c);
   unsigned int get(unsigned int pos);
+  Color &get(vec2);
+  Color &get(unsigned int x, unsigned int y);
   int sign(int x);
   void clear(Color c);
   void line(Color c, vec2 pos1, vec2 pos2);
   void iline(Color c, vec2 pos1, vec2 pos2);
   void tri(Color col, vec2 a, vec2 b, vec2 c);
   void ftri(Color fill, vec2 a, vec2 b, vec2 c);
+  void ntri(Color fill, vec2 a, vec2 b, vec2 c);
+  void circle(Color fill, vec2 center, float r);
   void present();
 };

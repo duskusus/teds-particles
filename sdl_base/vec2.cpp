@@ -36,6 +36,11 @@ unsigned int vec2::index()
 {
     return intx() + inty() * _WIDTH;
 }
+vec2 vec2::proj_on(const vec2 &p)
+{
+    float s = (x * p.x + y * p.y) / (p.x * p.x + p.y * p.y);
+    return vec2(p.x * s, p.y * s);
+}
 vec2::vec2(float _x, float _y)
 {
     x = _x;

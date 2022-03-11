@@ -1,5 +1,4 @@
 #pragma once
-#include <cmath>
 class vec2{
     public:
     float x = 0.0;
@@ -13,5 +12,6 @@ class vec2{
     float operator*(vec2 b);
     vec2 operator*(float f);
     vec2 operator/(float f);
+    vec2 proj_on(const vec2 &p);
     float len();
 };

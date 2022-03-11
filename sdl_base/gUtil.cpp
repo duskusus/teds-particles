@@ -51,7 +51,7 @@ void Fbuffer::present()
         SDL_Delay(16 - elapsed);
     }
     
-    std::cout << elapsed << std::endl;
+    //std::cout << elapsed << std::endl;
 }
 void Fbuffer::set(unsigned int x, unsigned int y, Color c)
 {
@@ -68,6 +68,18 @@ unsigned int Fbuffer::get(unsigned int pos)
         return buffer[pos].getInt();
     }
     return 0;
+}
+Color &Fbuffer::get(unsigned int x, unsigned int y)
+{
+    unsigned int pos = x + y * _HEIGHT;
+    if(pos < buffer_size){
+        return buffer[pos];
+    }
+    return buffer[0];
+}
+Color &Fbuffer::get(vec2 p)
+{
+    return get(p.x, p.y);
 }
 void Fbuffer::clear(Color c)
 {

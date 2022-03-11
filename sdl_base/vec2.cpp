@@ -1,5 +1,6 @@
 #include "vec2.h"
 #include "util.h"
+#include <string>
 vec2 vec2::operator+(vec2 b)
 {
     return vec2(x + b.x, y + b.y);
@@ -38,11 +39,16 @@ unsigned int vec2::index()
 }
 vec2 vec2::proj_on(const vec2 &p)
 {
-    float s = (x * p.x + y * p.y) / (p.x * p.x + p.y * p.y);
-    return vec2(p.x * s, p.y * s);
+    vec2 q = p;
+    float s = (*this) * q / (q * q);
+    return q * s;
 }
 vec2::vec2(float _x, float _y)
 {
     x = _x;
     y = _y;
+}
+std::string vec2::about()
+{
+    return "x: " + std::to_string(x) + " y: " + std::to_string(y);
 }

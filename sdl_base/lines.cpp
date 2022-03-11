@@ -38,7 +38,7 @@ void Fbuffer::iline( Color c, vec2 pos1, vec2 pos2)
         {
             int fy = t * dx + x1 * dy;
             fy = fy / dy;
-            set(fy, t + y1, Color(1, 0, 0));
+            set(fy, t + y1, c);
         }
     }
 }

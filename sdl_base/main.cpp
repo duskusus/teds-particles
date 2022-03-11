@@ -13,10 +13,16 @@ int main(int argc, char **argv) {
   int clicks = 0;
   vec2 vertices[3];
   vec2 lmouse = vec2(0, 0);
+  float cursor_radius = 0.01;
+  bool show_cursor = false;
+
   while (_RUNNING) {
-    s.circle(Color(0, 1, 0), mouse(), 0.1);
-    if((mouse()-lmouse).len() > 0.0001)s.circle(Color(0, 0, 0), lmouse, 0.1);
-    lmouse = mouse();
+    if(show_cursor){
+      if((mouse()-lmouse).len() > 0.0001)s.circle(Color(0, 0, 0), lmouse, cursor_radius);
+      s.circle(Color(0, 1, 0), mouse(), cursor_radius);
+      lmouse = mouse();
+    }
+
     if (clickCheck()) {
       vertices[clicks] = mouse();
       clicks ++;

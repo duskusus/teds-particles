@@ -1,9 +1,10 @@
 #pragma once
 #include "vec2.h"
 #include "vec3.h"
+#include <SDL2/SDL.h>
 #include <cmath>
 #include <stdint.h>
-#include <SDL2/SDL.h>
+
 
 extern unsigned int _WIDTH;
 extern unsigned int _HEIGHT;
@@ -22,6 +23,8 @@ public:
   SDL_Renderer *renderer;
   unsigned int pitch;
   unsigned int buffer_size;
+  bool debugging_circles = false;
+
   Fbuffer(unsigned int width, unsigned int height, SDL_Window *window);
   void set(vec2 pos, Color c);
   void set(unsigned int x, unsigned int y, Color c);

@@ -40,21 +40,9 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
       a.inty() == b.inty() || a.inty() == c.inty() || c.inty() == b.inty();
 
   if (h_edge && v_edge) {
-    std::cout << "both!! render time\n";
-    top = greatery(a, b, c);
-    bottom = lessery(a, b, c);
-    vec2 right = greaterx(a, b, c);
-    vec2 left = lesserx(a, b, c);
-
-    int height = top.inty() - bottom.inty();
-    int width = right.intx() - left.intx();
-    for(int y = 0; y < height; y++) {
-        int w = 0;
-        for(int x = 0; x < w; x++) {
-            set(x + left, y + bottom);
-        }
-
-    }
+    std::cout << "both\n";
+    std::cout << a.about() << " " << b.about() << " " << c.about() << std::endl;
+    ftri(fill, a, b, c);
   } else if (v_edge) {
 
     std::cout << "vertical edge\n";
@@ -203,8 +191,11 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
     b_b = middle;
     b_c = t_c;
 
-    ntri(Color(1, 0, 0), t_a, t_b, t_c);
-    ntri(Color(0, 0, 1), b_a, b_b, b_c);
+    //ntri(Color(1, 0, 0), t_a, t_b, t_c);
+    //ntri(Color(0, 0, 1), b_a, b_b, b_c);
+
+    ftri(Color(1, 0, 0), t_a, t_b, t_c);
+    ftri(Color(0, 1, 0), b_a, b_b, b_c);
 
     if (debugging_circles) {
       circle(Color(0, 0, 1), t_a, radius);

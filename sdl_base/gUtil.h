@@ -23,7 +23,7 @@ public:
   SDL_Renderer *renderer;
   unsigned int pitch;
   unsigned int buffer_size;
-  bool debugging_circles = false;
+  bool debugging_circles = true;
 
   Fbuffer(unsigned int width, unsigned int height, SDL_Window *window);
   void set(vec2 pos, Color c);

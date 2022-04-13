@@ -50,5 +50,5 @@ vec2::vec2(float _x, float _y)
 }
 std::string vec2::about()
 {
-    return "x: " + std::to_string(x) + " y: " + std::to_string(y);
+    return "x: " + std::to_string(intx()) + " y: " + std::to_string(inty());
 }

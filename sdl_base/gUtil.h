@@ -23,7 +23,7 @@ public:
   SDL_Renderer *renderer;
   unsigned int pitch;
   unsigned int buffer_size;
-  bool debugging_circles = true;
+  bool debugging_circles = false;
 
   Fbuffer(unsigned int width, unsigned int height, SDL_Window *window);
   void set(vec2 pos, Color c);
@@ -32,6 +32,7 @@ public:
   Color &get(vec2);
   Color &get(unsigned int x, unsigned int y);
   int sign(int x);
+  int sign(float x);
   void clear(Color c);
   void line(Color c, vec2 pos1, vec2 pos2);
   void iline(Color c, vec2 pos1, vec2 pos2);
@@ -40,4 +41,5 @@ public:
   void ntri(Color fill, vec2 a, vec2 b, vec2 c);
   void circle(Color fill, vec2 center, float r);
   void present();
+  void rtri(vec2 center, float dx, float dy);
 };

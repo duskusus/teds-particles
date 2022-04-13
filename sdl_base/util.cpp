@@ -60,6 +60,10 @@ void poll()
         }
         else if(e.type == SDL_KEYDOWN)
         {
+            switch(e.key.keysym.sym) {
+                case SDLK_ESCAPE:
+                _RUNNING = false;
+            }
             //handle keyboard events here with a switch on e.key.sym.keysym (or something)
         }
         else if(e.type == SDL_MOUSEBUTTONDOWN)

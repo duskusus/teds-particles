@@ -54,7 +54,7 @@ void Fbuffer::present()
     //std::cout << elapsed << std::endl;
 }
 void Fbuffer::set(unsigned int x, unsigned int y, Color c)
-{
+{   
     unsigned int i = x + y * _WIDTH;
     if(i < buffer_size)
     {
@@ -97,5 +97,8 @@ int Fbuffer::sign(int x)
         return -1;
     }
 
+}
+int Fbuffer::sign(float x) {
+    return (x > 0) ? 1 : -1;
 }
 

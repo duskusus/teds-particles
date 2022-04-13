@@ -21,6 +21,15 @@ void sorty(vec2 *vs) {
     std::cout << "sorting failed" << std::endl;
   }
 }
+void Fbuffer::rtri(vec2 center, float dx, float dy) {
+  float slope = dy / dx;
+  for (int x = center.intx(); x < dx * sign(dx); x++) {
+    int h = center.inty() - sign(dx) * slope * x;
+    for (int y = 0; y < h * sign(dy); y += sign(dy)) {
+      set(x, y, Color(1, 0, 0));
+    }
+  }
+}
 void sortx(vec2 *vs) {
   // returns vertices sorted in ascending order bx x value
   if (vs[0].x > vs[1].x) {
@@ -42,45 +51,37 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
   vec2 middle;
   vec2 bottom;
   // ftri(Color(0, 1, 0), a, b, c);
-
+  // categories triangles by the filled quadrant
+  int type = 1;
   float radius = 0.01; // for debugging circles
-  std::cout << "\n\n";
   bool v_edge =
       a.intx() == b.intx() || a.intx() == c.intx() || b.intx() == c.intx();
   bool h_edge =
       a.inty() == b.inty() || a.inty() == c.inty() || c.inty() == b.inty();
 
   if (h_edge && v_edge) {
-    std::cout << "both\n";
-    std::cout << a.about() << " " << b.about() << " " << c.about() << std::endl;
-    // ftri(fill, a, b, c);
     vec2 vx[] = {a, b, c};
     sortx(vx);
     vec2 vy[] = {a, b, c};
     sorty(vy);
-    int dx = (vx[2] - vx[0]).intx();
-    int dy;
-    if(vx[0].intx() == vx[1].intx()) {
-      //we know vertical edge is on the left
-      vec2 extreme = (vx[0].inty() == vx[2].inty()) ? vx[1] : vx[0];
-      dy = (vx[2] - extreme).inty();
-    } else if(vx[1].intx() == vx[2].intx()) {
-      //we know vertical edge is on the right
-      vec2 extreme = (vx[1].inty() == vx[0].inty()) ? vx[2] : vx[1];
-      dy = (extreme - vx[0]).inty();
-    }
-    float slope = float(dy) / float(dx);
-    std::cout << "dx " << dx << " dy " << dy << " slope " << slope << std::endl;
-    for(int x = 0; x < dx; x ++) {
-      int h = vx[0].inty() + slope * x;
-      for(int y = 0; y * y < h * h; y += sign(dy)) {
-        set(x + vx[0].intx(), vx[0].y - y, fill);
+    vec2 center(vx[1].x, vy[1].y);
+    circle(Color(0, 0, 1), center, radius);
+    int dx = (center.intx() == vx[0].intx()) ? vx[2].intx() : vx[0].intx();
+    dx = dx - center.intx();
+    int dy = (center.inty() == vy[0].inty()) ? vy[2].inty() : vy[0].inty();
+    dy = dy - center.inty();
+    float slope = float(std::abs(dy)) / float(std::abs(dx));
+    for (int x = 0; x < std::abs(dx); x++) {
+      int h = std::abs(float(dy)) - float(x) * slope;
+      for (int y = 0; y < std::abs(h); y++) {
+        set(center.intx() + x * sign(dx) ,center.inty() + y * sign(dy), fill);
       }
     }
-    tri(Color(1, 1, 1), a, b, c);
+    std::cout << "\n";
+    tri(Color(0, 1, 0), a, b, c);
   } else if (h_edge) {
 
-    std::cout << "horizontal edge\n";
+    //std::cout << "horizontal edge\n";
     // broken up into smaller triangles
     // sort by x
     vec2 vertices[] = {a, b, c};
@@ -98,7 +99,7 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
     // top to bottom
     float slope = (bottom.y - top.y) / (bottom.x - top.x);
     float k = top.y - slope * top.x;
-    std::cout << "slope " << slope << std::endl;
+    // std::cout << "slope " << slope << std::endl;
     float new_y = slope * middle.x + k;
     if (middle.x < top.x && middle.x > bottom.x)
 
@@ -107,19 +108,14 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
       t_a = top;
     t_b = middle;
     t_c = vec2(middle.x, new_y);
-
-    std::cout << "top " << top.about() << "\nmid " << middle.about()
-              << "\nbottom " << bottom.about() << "\nsplit " << t_c.about()
-              << std::endl;
-
     // bottom triangle
 
     b_a = bottom;
     b_b = middle;
     b_c = t_c;
 
-    ntri(Color(1, 0, 0), t_a, t_b, t_c);
-    ntri(Color(0, 0, 1), b_a, b_b, b_c);
+    ntri(fill, t_a, t_b, t_c);
+    ntri(fill, b_a, b_b, b_c);
 
     if (debugging_circles) {
       circle(Color(0, 0, 1), t_a, radius);
@@ -134,7 +130,7 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
     }
   } else if (v_edge) {
 
-    std::cout << "vertical edge\n";
+    //std::cout << "vertical edge\n";
     // sort by y
     vec2 vertices[] = {a, b, c};
     sorty(vertices);
@@ -152,7 +148,6 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
     // finding fourth vertex , splitting point, intersection of x = middle.x and
     // line from top to bottom
     float slope = (bottom.y - top.y) / (bottom.x - top.x);
-    std::cout << "slope " << slope << std::endl;
     float new_x =
         (middle.y - bottom.y) * (bottom.x - top.x) / (bottom.y - top.y) +
         bottom.x;
@@ -163,18 +158,14 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
     t_b = middle;
     t_c = vec2(new_x, middle.y);
 
-    std::cout << "top " << top.about() << "\nmid " << middle.about()
-              << "\nbottom " << bottom.about() << "\nsplit " << t_c.about()
-              << std::endl;
-
     // bottom triangle
 
     b_a = bottom;
     b_b = middle;
     b_c = t_c;
 
-    ntri(Color(1, 0, 0), t_a, t_b, t_c);
-    ntri(Color(0, 0, 1), b_a, b_b, b_c);
+    ntri(fill, t_a, t_b, t_c);
+    ntri(fill, b_a, b_b, b_c);
 
     if (debugging_circles) {
       circle(Color(0, 0, 1), t_a, radius);
@@ -190,8 +181,6 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
 
     set(middle, Color(0, 1, 0));
   } else {
-
-    std::cout << "neither\n";
 
     // broken up into smaller triangles
     // sort by y
@@ -210,7 +199,6 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
     // top to bottom
     float slope = (bottom.y - top.y) / (bottom.x - top.x);
     float k = top.y - slope * top.x;
-    std::cout << "slope " << slope << std::endl;
     float new_x = (middle.y - k) / slope;
 
     // top triangle
@@ -218,10 +206,6 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
     t_a = top;
     t_b = middle;
     t_c = vec2(new_x, middle.y);
-
-    std::cout << "top " << top.about() << "\nmid " << middle.about()
-              << "\nbottom " << bottom.about() << "\nsplit " << t_c.about()
-              << std::endl;
 
     // bottom triangle
 
@@ -232,8 +216,8 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
     // ntri(Color(1, 0, 0), t_a, t_b, t_c);
     // ntri(Color(0, 0, 1), b_a, b_b, b_c);
 
-    ntri(Color(1, 0, 0), t_a, t_b, t_c);
-    ntri(Color(0, 1, 0), b_a, b_b, b_c);
+    ntri(fill, t_a, t_b, t_c);
+    ntri(fill, b_a, b_b, b_c);
 
     if (debugging_circles) {
       circle(Color(0, 0, 1), t_a, radius);

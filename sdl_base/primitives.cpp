@@ -47,12 +47,17 @@ void sortx(vec2 *vs) {
 }
 void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
 
-  vec2 top;
-  vec2 middle;
-  vec2 bottom;
+  int min_size = 10;
+  vec2 vx[] = {a, b, c};
+  sortx(vx);
+  vec2 vy[] = {a, b, c};
+  sorty(vy);
+  vec2 top = vy[2];
+  vec2 middle = vy[1];
+  vec2 bottom = vy[0];
+  if(vx[2].intx() - vx[0].intx() < min_size  || vy[2].inty() - vy[0].inty() < min_size) return;
   // ftri(Color(0, 1, 0), a, b, c);
-  // categories triangles by the filled quadrant
-  int type = 1;
+
   float radius = 0.01; // for debugging circles
   bool v_edge =
       a.intx() == b.intx() || a.intx() == c.intx() || b.intx() == c.intx();
@@ -60,30 +65,21 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
       a.inty() == b.inty() || a.inty() == c.inty() || c.inty() == b.inty();
 
   if (h_edge && v_edge) {
-    vec2 vx[] = {a, b, c};
-    sortx(vx);
-    vec2 vy[] = {a, b, c};
-    sorty(vy);
     vec2 center(vx[1].x, vy[1].y);
-    circle(Color(0, 0, 1), center, radius);
-    int dx = (center.intx() == vx[0].intx()) ? vx[2].intx() : vx[0].intx();
-    dx = dx - center.intx();
-    int dy = (center.inty() == vy[0].inty()) ? vy[2].inty() : vy[0].inty();
-    dy = dy - center.inty();
+    int dx = ((center.intx() == vx[0].intx()) ? vx[2].intx() : vx[0].intx()) - center.intx();
+    int dy = ((center.inty() == vy[0].inty()) ? vy[2].inty() : vy[0].inty()) - center.inty();
     float slope = float(std::abs(dy)) / float(std::abs(dx));
-    for (int x = 0; x < std::abs(dx); x++) {
-      int h = std::abs(float(dy)) - float(x) * slope;
+      for (int x = 0; x < std::abs(dx); x++) {
+      int h = std::abs(dy) - x * slope + 1;
       for (int y = 0; y < std::abs(h); y++) {
-        set(center.intx() + x * sign(dx) ,center.inty() + y * sign(dy), fill);
+        set(center.intx() + x * sign(dx), center.inty() + y * sign(dy), fill);
       }
     }
-    std::cout << "\n";
-    tri(Color(0, 1, 0), a, b, c);
   } else if (h_edge) {
 
-    //std::cout << "horizontal edge\n";
-    // broken up into smaller triangles
-    // sort by x
+    // std::cout << "horizontal edge\n";
+    //  broken up into smaller triangles
+    //  sort by x
     vec2 vertices[] = {a, b, c};
     sortx(vertices);
     top = vertices[2];
@@ -130,8 +126,8 @@ void Fbuffer::ntri(Color fill, vec2 a, vec2 b, vec2 c) {
     }
   } else if (v_edge) {
 
-    //std::cout << "vertical edge\n";
-    // sort by y
+    // std::cout << "vertical edge\n";
+    //  sort by y
     vec2 vertices[] = {a, b, c};
     sorty(vertices);
     bottom = vertices[0];

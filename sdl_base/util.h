@@ -11,3 +11,5 @@ void quit();
 void poll();
 Fbuffer init(int width, int height, const char *name);
 bool clickCheck();
+float frand(float min = 0, float max = 1);
+vec2 vec2rand();

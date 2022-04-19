@@ -13,7 +13,15 @@ unsigned int _WIDTH = 0;
 unsigned int _HEIGHT = 0;
 Color *_FPIXELS;
 Fbuffer *_SCREEN;
-
+float frand(float min, float max)
+{
+    float range = max - min;
+    float n = float(rand()) / float(RAND_MAX);
+    return min + n * range;
+}
+vec2 vec2rand() {
+    return vec2(frand(-1, 1), frand(-1, 1));
+}
 vec2 mouse(){
     vec2 fmouse(2.0 * _MOUSEPOS.x / float(_WIDTH) - 1.0, 1.0 - (2.0 * _MOUSEPOS.y / float(_HEIGHT)));
     //correct method of converting int screenspace to floating point ndc
